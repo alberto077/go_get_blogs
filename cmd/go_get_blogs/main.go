@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/alberto077/go_get_blogs/interal/config"
+	"github.com/alberto077/go_get_blogs/internal/config"
 )
 
 
