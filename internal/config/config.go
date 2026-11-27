@@ -7,6 +7,10 @@ import (
 )
 const configFileName string = ".blogconfig.json"
 
+type State struct {
+	CurrConfig *Config
+}
+
 type Config struct {
 	DbURL string `json:"db_url"`
 	CurrentUserName string `json:"current_user_name"`
@@ -70,3 +74,15 @@ func Read() (*Config, error){
 }
 
 
+func NewState () *State{
+	currConfig, err:= Read()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1);
+	}
+
+	return &State{
+		CurrConfig: currConfig,
+	}
+
+}
