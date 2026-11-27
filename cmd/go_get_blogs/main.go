@@ -2,24 +2,53 @@ package main
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/alberto077/go_get_blogs/internal/commands"
 	"github.com/alberto077/go_get_blogs/internal/config"
 )
 
 
 func main() {
-	BaseConfig, err := config.Read()
-	if err != nil {
-		fmt.Println("Could not grab a new config")
+/*
+	loginName := flag.String("login", "", "User that wants to login")
+
+	flag.Parse()
+
+	if *loginName == "" {
+		fmt.Println("Login name is required")
+		os.Exit(1) 
 	}
 
-	BaseConfig.SetUser("Alberto")
+*/
+	// Would probably have a while loop here to keep reading commands
+	appState := config.NewState()
 
-	newConfig, err := config.Read()
-	if err != nil {
-		fmt.Println("Could read new config")
+	cmdRegistry := commands.CommandRegistry{
+		Commands: make(map[string]func(s *config.State, cmd commands.Command) error),
 	}
 
-	fmt.Printf("Config db url: %s, CurrentUser %s\n", newConfig.DbURL, newConfig.CurrentUserName)
+	cmdRegistry.Register("login", commands.HandleLogin)
+
+	if len(os.Args) < 2 {
+		return 
+	}
+
+	cmd := commands.Command{
+		Name: os.Args[1],
+		Args: os.Args[2:],
+	}
+
+	if err := cmdRegistry.Run(appState, cmd); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	
+
+	fmt.Printf("Config db url: %s, CurrentUser %s\n", appState.CurrConfig.DbURL, appState.CurrConfig.CurrentUserName)
+
+
 
 
 }
