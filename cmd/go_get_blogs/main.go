@@ -31,7 +31,7 @@ func main() {
 	cmdRegistry.Register("login", commands.HandleLogin)
 
 	if len(os.Args) < 2 {
-		return 
+		os.Exit(1)
 	}
 
 	cmd := commands.Command{
